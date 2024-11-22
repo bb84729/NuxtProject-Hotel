@@ -141,7 +141,7 @@ const roomImages = computed(() =>
                     <p class="mb-0 fw-bold">
                       NT$ 10,000
                     </p>
-                   <NuxtLink :to="{ name: 'rooms-roomId', params: { roomId: 'a' } }" class="icon-link icon-link-hover text-primary-100">
+                   <NuxtLink :to="{ name: 'room-detail', params: { roomId: 'a' } }" class="icon-link icon-link-hover text-primary-100">
                   <Icon class="bi fs-5" icon="mdi:arrow-right" />
                 </NuxtLink>
                   </div>
@@ -199,7 +199,7 @@ const roomImages = computed(() =>
                     <p class="mb-0 fw-bold">
                       NT$ 10,000
                     </p>
-                    <NuxtLink :to="{ name: 'rooms-roomId', params: { roomId: 'b' } }" class="icon-link icon-link-hover text-primary-100">
+                    <NuxtLink :to="{ name: 'room-detail', params: { roomId: 'b' } }" class="icon-link icon-link-hover text-primary-100">
                     <Icon class="bi fs-5" icon="mdi:arrow-right" />
                   </NuxtLink>
                   </div>
@@ -257,7 +257,7 @@ const roomImages = computed(() =>
                     <p class="mb-0 fw-bold">
                       NT$ 10,000
                     </p>
-                    <NuxtLink :to="{ name: 'rooms-roomId', params: { roomId: 'c' } }" class="icon-link icon-link-hover text-primary-100">
+                    <NuxtLink :to="{ name: 'room-detail', params: { roomId: 'c' } }" class="icon-link icon-link-hover text-primary-100">
                     <Icon class="bi fs-5" icon="mdi:arrow-right" />
                   </NuxtLink>
                   </div>
@@ -315,7 +315,7 @@ const roomImages = computed(() =>
                     <p class="mb-0 fw-bold">
                       NT$ 10,000
                     </p>
-                    <NuxtLink :to="{ name: 'rooms-roomId', params: { roomId: 'd' } }" class="icon-link icon-link-hover text-primary-100">
+                    <NuxtLink :to="{ name: 'room-detail', params: { roomId: 'd' } }" class="icon-link icon-link-hover text-primary-100">
                     <Icon class="bi fs-5" icon="mdi:arrow-right" />
                   </NuxtLink>
                   </div>
