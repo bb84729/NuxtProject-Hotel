@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   },
   plugins: [
     '~/plugins/v-calendar.js',
+    '~/plugins/bootstrap.client.js'
   ],
   
 })

@@ -1,4 +1,5 @@
 <script setup>
+
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRoute } from '#app'; // 使用 Nuxt 提供的 useRoute
 import { Icon } from '@iconify/vue';
@@ -12,9 +13,6 @@ if (process.client)
 
 const route = useRoute();
 const transparentBgRoute = ['home', 'rooms'];
-
-console.log('Current route name:', route.name);
-console.log('Transparent routes:', transparentBgRoute);
 
 const isTransparentRoute = computed(() => transparentBgRoute.includes(route.name));
 
@@ -80,7 +78,7 @@ onUnmounted(() =>
               </div>
             </li>
             <li class="d-md-none nav-item">
-              <NuxtLink to="/login" class="nav-link p-4 text-neutral-0">
+              <NuxtLink to="/account/login" class="nav-link p-4 text-neutral-0">
                 會員登入
               </NuxtLink>
             </li>

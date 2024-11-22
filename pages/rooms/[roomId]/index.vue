@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 import DatePickerModal from '@/components/rooms/DatePickerModal.vue';
 import { Icon } from '@iconify/vue';
 definePageMeta({
+  name:'room-detail',
   layout: 'front', // 與文件名一致
 });
 const route = useRoute();
@@ -388,7 +389,7 @@ const handleDateChange = (bookingInfo) =>
                 NT$ 10,000
               </h5>
               <NuxtLink
-              :to="{ name: 'rooms-roomId-booking' , params: { roomId: route.params.roomId } }"
+              :to="{ name: 'booking' , params: { roomId: route.params.roomId } }"
               class="btn btn-primary-100 py-4 text-neutral-0 fw-bold rounded-3"
             >
               立即預訂
@@ -415,7 +416,7 @@ const handleDateChange = (bookingInfo) =>
               daysFormatOnMobile(bookingDate.date?.start) }} - {{ daysFormatOnMobile(bookingDate.date?.end) }}</span>
           </div>
           <NuxtLink
-                :to="{ name: 'rooms-roomId-booking', params: { roomId: route.params.roomId } }"
+                :to="{ name: 'booking', params: { roomId: route.params.roomId } }"
                 class="btn btn-primary-100 px-12 py-4 text-neutral-0 fw-bold rounded-3"
               >
                 立即預訂
