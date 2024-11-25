@@ -10,10 +10,7 @@ export default defineNuxtConfig({
       '@popperjs/core',
     ],
   },
-  plugins: [
-    '~/plugins/v-calendar.js',
-    '~/plugins/bootstrap.client.js'
-  ],
+  
   nitro: {
     preset: 'node-server', // 使用 Node.js 伺服器作為部署方式
   },
