@@ -4,11 +4,6 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRoute } from '#app'; // 使用 Nuxt 提供的 useRoute
 import { Icon } from '@iconify/vue';
 
-// if (process.client)
-// {
-//   import('bootstrap/js/dist/collapse'); // 僅在客戶端加載
-//   import('bootstrap/js/dist/dropdown');
-// }
 
 
 const route = useRoute();

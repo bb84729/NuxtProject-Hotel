@@ -9,6 +9,80 @@ definePageMeta({
   layout: 'account', // 與文件名一致
 });
 const isEmailAndPasswordValid = ref(false);
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const name = ref('');
+const phone = ref('');
+const birthYear = ref('');
+const birthMonth = ref('');
+const birthDay = ref('');
+const city = ref('');
+const district = ref('');
+const address = ref('');
+const agreementChecked = ref(false);
+
+const router = useRouter();
+
+const signup = async () => {
+  if (!agreementChecked.value) {
+    alert('請先勾選同意條款！');
+    return;
+  }
+
+  // 檢查密碼一致性
+  if (password.value !== confirmPassword.value) {
+    alert('密碼與確認密碼不一致！');
+    return;
+  }
+
+  // // 構造 API body
+  // const payload = {
+  //   name: name.value,
+  //   email: email.value,
+  //   password: password.value,
+  //   phone: phone.value,
+  //   birthday: `${birthYear.value}/${birthMonth.value}/${birthDay.value}`,
+  //   address: {
+  //     zipcode: parseInt(district.value),
+  //     detail: address.value,
+  //   },
+  // };
+
+  const payload = {
+  "name": name.value,
+  "email": email.value,
+  "password": password.value,
+  "phone": phone.value,
+  "birthday": "1982/2/4",
+  "address": {
+    "zipcode": 802,
+    "detail": "文山路23號"
+  }
+}
+
+  console.log(payload);
+  
+
+  try {
+    const response = await $fetch('https://nuxr3.zeabur.app/api/v1/user/signup', {
+      method: 'POST',
+      body: payload,
+    });
+console.log(response);
+
+    // 根據返回結果判斷
+    if (response.status) {
+      alert('註冊成功！即將跳轉到登入頁面');
+      router.push('/account/login');
+    } else {
+      alert(`註冊失敗：${response.message}`);
+    }
+  } catch (error) {
+    console.error('註冊過程中發生錯誤：', error);
+    alert('註冊失敗，請稍後再試！');
+  }
+};
 </script>
 
 <template>
@@ -52,21 +126,21 @@ const isEmailAndPasswordValid = ref(false);
           <label class="mb-2 text-neutral-0 fw-bold" for="email">
             電子信箱
           </label>
-          <input id="email" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
+          <input v-model="email" id="email" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
             placeholder="hello@exsample.com" type="email">
         </div>
         <div class="mb-4 fs-8 fs-md-7">
           <label class="mb-2 text-neutral-0 fw-bold" for="password">
             密碼
           </label>
-          <input id="password" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40" placeholder="請輸入密碼"
+          <input v-model="password" id="password" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40" placeholder="請輸入密碼"
             type="password">
         </div>
         <div class="mb-10 fs-8 fs-md-7">
           <label class="mb-2 text-neutral-0 fw-bold" for="confirmPassword">
             確認密碼
           </label>
-          <input id="confirmPassword" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
+          <input v-model="confirmPassword" id="confirmPassword" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
             placeholder="請再輸入一次密碼" type="password">
         </div>
         <button class="btn btn-neutral-40 w-100 py-4 text-neutral-60 fw-bold" type="button"
@@ -79,14 +153,14 @@ const isEmailAndPasswordValid = ref(false);
           <label class="mb-2 text-neutral-0 fw-bold" for="name">
             姓名
           </label>
-          <input id="name" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40  rounded-3"
+          <input v-model="name" id="name" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40  rounded-3"
             placeholder="請輸入姓名" type="text">
         </div>
         <div class="mb-4 fs-8 fs-md-7">
           <label class="mb-2 text-neutral-0 fw-bold" for="phone">
             手機號碼
           </label>
-          <input id="phone" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40  rounded-3"
+          <input v-model="phone" id="phone" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40  rounded-3"
             placeholder="請輸入手機號碼" type="tel">
         </div>
         <div class="mb-4 fs-8 fs-md-7">
@@ -94,18 +168,18 @@ const isEmailAndPasswordValid = ref(false);
             生日
           </label>
           <div class="d-flex gap-2">
-            <select id="birth" class="form-select p-4 text-neutral-80 fw-medium rounded-3">
-              <option v-for="year in 65" :key="year" value="`${year + 1958} 年`">
+            <select v-model="birthYear" id="birth" class="form-select p-4 text-neutral-80 fw-medium rounded-3">
+              <option v-for="year in 65" :key="year" :value="year+1985">
                 {{ year + 1958 }} 年
               </option>
             </select>
-            <select class="form-select p-4 text-neutral-80 fw-medium rounded-3">
-              <option v-for="month in 12" :key="month" value="`${month} 月`">
+            <select v-model="birthMonth" class="form-select p-4 text-neutral-80 fw-medium rounded-3">
+              <option v-for="month in 12" :key="month" :value="month">
                 {{ month }} 月
               </option>
             </select>
-            <select class="form-select p-4 text-neutral-80 fw-medium rounded-3">
-              <option v-for="day in 30" :key="day" value="`${day} 日`">
+            <select v-model="birthDay" class="form-select p-4 text-neutral-80 fw-medium rounded-3">
+              <option v-for="day in 30" :key="day" :value="day">
                 {{ day }} 日
               </option>
             </select>
@@ -117,7 +191,7 @@ const isEmailAndPasswordValid = ref(false);
           </label>
           <div>
             <div class="d-flex gap-2 mb-2">
-              <select class="form-select p-4 text-neutral-80 fw-medium rounded-3">
+              <select v-model="city" class="form-select p-4 text-neutral-80 fw-medium rounded-3">
                 <option value="臺北市">
                   臺北市
                 </option>
@@ -128,29 +202,29 @@ const isEmailAndPasswordValid = ref(false);
                   高雄市
                 </option>
               </select>
-              <select class="form-select p-4 text-neutral-80 fw-medium rounded-3">
-                <option value="前金區">
+              <select v-model="district" class="form-select p-4 text-neutral-80 fw-medium rounded-3">
+                <option value="330">
                   前金區
                 </option>
-                <option value="鹽埕區">
+                <option value="330">
                   鹽埕區
                 </option>
-                <option selected value="新興區">
+                <option selected value="330">
                   新興區
                 </option>
               </select>
             </div>
-            <input id="address" type="text" class="form-control p-4 rounded-3" placeholder="請輸入詳細地址">
+            <input v-model="address" id="address" type="text" class="form-control p-4 rounded-3" placeholder="請輸入詳細地址">
           </div>
         </div>
 
         <div class="form-check d-flex align-items-end gap-2 mb-10 text-neutral-0">
-          <input id="agreementCheck" class="form-check-input" type="checkbox" value="">
+          <input v-model="agreementChecked" id="agreementCheck" class="form-check-input" type="checkbox" value="">
           <label class="form-check-label fw-bold" for="agreementCheck">
             我已閱讀並同意本網站個資使用規範
           </label>
         </div>
-        <button class="btn btn-primary-100 w-100 py-4 text-neutral-0 fw-bold" type="button">
+        <button @click="signup" class="btn btn-primary-100 w-100 py-4 text-neutral-0 fw-bold" type="button">
           完成註冊
         </button>
       </form>
