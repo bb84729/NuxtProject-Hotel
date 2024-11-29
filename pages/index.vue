@@ -362,14 +362,14 @@ definePageMeta({
 });
 
 // 獲取新聞資料
-const { data: newsDataRaw, pending: newsPending, error: newsError } = useFetch('https://nuxr3.zeabur.app/api/v1/home/news/');
+const { data: newsDataRaw, pending: newsPending, error: newsError } = await useFetch('https://nuxr3.zeabur.app/api/v1/home/news/');
 const newsData = ref([]);
 if (newsDataRaw) {
   newsData.value = newsDataRaw.value?.result || [];
 }
 
 // 獲取美食資料
-const { data: culinaryDataRaw, pending: culinaryPending, error: culinaryError } = useFetch('https://nuxr3.zeabur.app/api/v1/home/culinary/');
+const { data: culinaryDataRaw, pending: culinaryPending, error: culinaryError } = await useFetch('https://nuxr3.zeabur.app/api/v1/home/culinary/');
 const culinaryData = ref([]);
 if (culinaryDataRaw) {
   culinaryData.value = culinaryDataRaw.value?.result || [];
