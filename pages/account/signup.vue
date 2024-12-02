@@ -24,6 +24,24 @@ const agreementChecked = ref(false);
 
 const router = useRouter();
 
+// 檢查電子郵件和密碼是否有效
+const isValid = computed(() => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return (
+    emailPattern.test(email.value) &&
+    password.value.length >= 6 &&
+    password.value === confirmPassword.value
+  );
+});
+
+// 當 isValid 為 true 時更新 isEmailAndPasswordValid 狀態
+const goToNextStep = () => {
+  if (isValid.value) {
+    isEmailAndPasswordValid.value = true;
+  } else {
+    alert('請確保電子郵件格式正確，密碼一致且至少6個字元');
+  }
+};
 const signup = async () => {
   if (!agreementChecked.value) {
     alert('請先勾選同意條款！');
@@ -54,7 +72,7 @@ const signup = async () => {
   "email": email.value,
   "password": password.value,
   "phone": phone.value,
-  "birthday": "1982/2/4",
+  "birthday": `${birthYear.value}/${birthMonth.value}/${birthDay.value}`,
   "address": {
     "zipcode": 802,
     "detail": "文山路23號"
@@ -65,7 +83,7 @@ const signup = async () => {
   
 
   try {
-    const response = await $fetch('https://nuxr3.zeabur.app/api/v1/user/signup', {
+    const response = await $fetch('https://freyja-rfio.onrender.com/api/v1/user/signup', {
       method: 'POST',
       body: payload,
     });
@@ -143,8 +161,16 @@ console.log(response);
           <input v-model="confirmPassword" id="confirmPassword" class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
             placeholder="請再輸入一次密碼" type="password">
         </div>
-        <button class="btn btn-neutral-40 w-100 py-4 text-neutral-60 fw-bold" type="button"
-          @click="isEmailAndPasswordValid = true">
+              <button
+          :class="{
+            'btn-primary-100 text-neutral-0': isValid,
+            'btn-neutral-40 text-neutral-60': !isValid,
+          }"
+          class="btn w-100 py-4 fw-bold"
+          type="button"
+          @click="goToNextStep"
+          :disabled="!isValid"
+        >
           下一步
         </button>
       </form>
@@ -169,7 +195,7 @@ console.log(response);
           </label>
           <div class="d-flex gap-2">
             <select v-model="birthYear" id="birth" class="form-select p-4 text-neutral-80 fw-medium rounded-3">
-              <option v-for="year in 65" :key="year" :value="year+1985">
+              <option v-for="year in 65" :key="year" :value="year+1958">
                 {{ year + 1958 }} 年
               </option>
             </select>

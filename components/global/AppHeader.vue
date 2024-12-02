@@ -1,17 +1,53 @@
 <script setup>
 
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { useRoute } from '#app'; // 使用 Nuxt 提供的 useRoute
+import { useRoute } from '#app'; 
 import { Icon } from '@iconify/vue';
+
 
 
 
 const route = useRoute();
 const transparentBgRoute = ['home', 'rooms'];
-
 const isTransparentRoute = computed(() => transparentBgRoute.includes(route.name));
-
 const isScrolled = ref(false);
+
+const authToken = useCookie('auth_token');
+const username = ref(null); 
+const isLoggedIn = computed(() => !!authToken.value); // 檢查是否已登入
+const userId = ref(null)
+
+const fetchUsername = async () => {
+  if (!authToken.value) return; // 如果沒有 token，不需要進行 API 請求
+
+  try {
+    const response = await $fetch('https://freyja-rfio.onrender.com/api/v1/user/', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken.value}`, // 添加 token 到 header
+      },
+    });
+
+    if (response.status && response.result?.name) {
+      username.value = response.result.name; // 更新使用者名稱
+      userId.value = response.result._id
+      
+      
+    } else {
+      console.error('無法取得使用者名稱，請檢查 API 回應:', response);
+    }
+  } catch (error) {
+    console.error('API 請求錯誤:', error);
+    // authToken.value = null; // 如果請求錯誤，清除 token
+  }
+};
+
+const logout = () => {
+  authToken.value = null; // 清除 token
+  username.value = null;
+  alert('您已登出');
+  location.reload(); // 重新整理頁面以更新狀態
+};
 
 const handleScroll = () =>
 {
@@ -21,6 +57,7 @@ const handleScroll = () =>
 onMounted(() =>
 {
   window.addEventListener('scroll', handleScroll);
+  fetchUsername(); // 元件掛載時請求 API 獲取使用者名稱
 });
 
 onUnmounted(() =>
@@ -30,7 +67,8 @@ onUnmounted(() =>
 </script>
 
 <template>
-  <header :class="{
+ 
+    <header  :class="{
     scrolled: isScrolled,
     'bg-transparent': isTransparentRoute,
     'bg-neutral-120': !isTransparentRoute
@@ -39,9 +77,8 @@ onUnmounted(() =>
       <div class="container-fluid justify-content-between p-0">
         <NuxtLink class="navbar-brand p-0" to="/">
           <img src="/assets/images/logo-white.svg" 
-          alt="logo"
-          class="logo img-fluid"
-          />
+               alt="logo"
+               class="logo img-fluid" />
         </NuxtLink>
         <button class="navbar-toggler collapsed p-2 text-white border-0 shadow-none" type="button"
           data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false"
@@ -56,27 +93,52 @@ onUnmounted(() =>
                 客房旅宿
               </NuxtLink>
             </li>
-            <li class="d-none d-md-block nav-item">
-              <div class="btn-group">
-                <button type="button" class="nav-link d-flex gap-2 p-4 text-neutral-0" data-bs-toggle="dropdown">
-                  <Icon class="fs-5" icon="mdi:account-circle-outline" />
-                  Jessica
-                </button>
-                <ul class="dropdown-menu py-3 overflow-hidden" style="right: 0; left: auto; border-radius: 20px;">
-                  <li>
-                    <a class="dropdown-item px-6 py-4" href="#">我的帳戶</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item px-6 py-4" href="#">登出</a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li class="d-md-none nav-item">
-              <NuxtLink to="/account/login" class="nav-link p-4 text-neutral-0">
-                會員登入
-              </NuxtLink>
-            </li>
+
+            <!-- 未登入時顯示登入與註冊按鈕 -->
+            <template v-if="!isLoggedIn">
+              <li class="nav-item">
+                <NuxtLink to="/account/login" class="nav-link p-4 text-neutral-0">
+                  登入
+                </NuxtLink>
+              </li>
+              <li class="nav-item">
+                <NuxtLink to="/account/signup" class="nav-link p-4 text-neutral-0">
+                  註冊
+                </NuxtLink>
+              </li>
+            </template>
+
+            <!-- 已登入時顯示使用者名稱與下拉選單 -->
+            <template v-else>
+              <li class="nav-item">
+                <div class="btn-group">
+                  <button type="button" class="nav-link d-flex gap-2 p-4 text-neutral-0" data-bs-toggle="dropdown">
+                    <Icon class="fs-5" icon="mdi:account-circle-outline" />
+                    {{ username }}
+                  </button>
+                  <ul class="dropdown-menu py-3 overflow-hidden" style="right: 0; left: auto; border-radius: 20px;">
+                    <li>
+
+                      <NuxtLink  v-if="userId"
+                          :to="{ 
+                            name: 'profile', 
+                            params: { userId: userId } 
+                          }" 
+                          class="dropdown-item px-6 py-4"
+                        >
+                        我的帳戶
+                      </NuxtLink>
+                    </li>
+                    <li>
+                      <button @click="logout" class="dropdown-item px-6 py-4">
+                        登出
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </template>
+
             <li class="nav-item">
               <NuxtLink to="/rooms" class="btn btn-primary-100 px-8 py-4 text-white fw-bold border-0 rounded-3">
                 立即訂房
@@ -87,6 +149,8 @@ onUnmounted(() =>
       </div>
     </nav>
   </header>
+ 
+  
 </template>
 
 <style lang="scss" scoped>

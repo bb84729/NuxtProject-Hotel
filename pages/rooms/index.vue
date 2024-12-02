@@ -20,7 +20,7 @@ definePageMeta({
 const modules = ref([Autoplay, Navigation, Pagination]);
 
 // 獲取房型資料
-const { data: roomsDataRaw, pending: roomsPending, error: roomsError } = await useFetch('https://nuxr3.zeabur.app/api/v1/rooms');
+const { data: roomsDataRaw, pending: roomsPending, error: roomsError } = await useFetch('https://freyja-rfio.onrender.com/api/v1/rooms/');
 const roomsData = computed(() => roomsDataRaw.value?.result || []);
 console.log(roomsData.value);
 

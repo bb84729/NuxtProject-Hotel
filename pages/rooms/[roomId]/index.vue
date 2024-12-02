@@ -22,7 +22,7 @@ const roomDetail = reactive({
 const fetchRoomDetail = async () => {
   try {
     roomDetail.pending = true;
-    const response = await $fetch(`https://nuxr3.zeabur.app/api/v1/rooms/${roomId}`);
+    const response = await $fetch(`https://freyja-rfio.onrender.com/api/v1/rooms/${roomId}`);
     if (response.status) {
       roomDetail.data = response.result;
       console.log(roomDetail.data);
@@ -293,7 +293,7 @@ const handleDateChange = (bookingInfo) =>
               </div>
 
               <h5 class="mb-0 text-primary-100 fw-bold">
-                NT$ 10,000
+                NT$ {{ roomDetail.data.price }}
               </h5>
               <NuxtLink
               :to="{ name: 'booking' , params: { roomId: route.params.roomId } }"
