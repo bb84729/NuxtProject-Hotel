@@ -9,9 +9,11 @@ definePageMeta({
 });
 
 const route = useRoute();
+const router = useRouter();
 const roomId = route.params.roomId; // 從路由中取得房型 id
-console.log(roomId);
 
+const authToken = useCookie('auth_token'); // 從 cookie 獲取 token
+const isLoggedIn = computed(() => !!authToken.value); // 判斷是否已登入
 const roomDetail = reactive({
   data: null,
   pending: true,
@@ -25,7 +27,6 @@ const fetchRoomDetail = async () => {
     const response = await $fetch(`https://freyja-rfio.onrender.com/api/v1/rooms/${roomId}`);
     if (response.status) {
       roomDetail.data = response.result;
-      console.log(roomDetail.data);
       
     } else {
       throw new Error('API 返回錯誤');
@@ -83,7 +84,29 @@ const handleDateChange = (bookingInfo) =>
   bookingPeople.value = bookingInfo?.people || 1;
   daysCount.value = bookingInfo.daysCount;
 }
+const handleBooking = () => {
+  if (!isLoggedIn.value) {
+    alert('請先登入再進行訂房！');
+    return;
+  }
 
+  if (!bookingDate.date.start || !bookingDate.date.end) {
+    alert('請選擇入住和退房日期！');
+    return;
+  }
+
+  const bookingInfo = {
+    roomId: route.params.roomId,
+    checkIn: bookingDate.date.start,
+    checkOut: bookingDate.date.end,
+    people: bookingPeople.value,
+  };
+
+  router.push({
+    name: 'booking',
+    query: bookingInfo,
+  });
+};
 
 </script>
 
@@ -295,6 +318,12 @@ const handleDateChange = (bookingInfo) =>
               <h5 class="mb-0 text-primary-100 fw-bold">
                 NT$ {{ roomDetail.data.price }}
               </h5>
+              <button
+                class="btn btn-primary-100 py-4 text-neutral-0 fw-bold rounded-3"
+                @click="handleBooking"
+              >
+                立即預訂1
+              </button>
               <NuxtLink
               :to="{ name: 'booking' , params: { roomId: route.params.roomId } }"
               class="btn btn-primary-100 py-4 text-neutral-0 fw-bold rounded-3"

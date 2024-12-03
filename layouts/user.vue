@@ -2,6 +2,33 @@
 const route = useRoute();
 import AppHeader from '../components/global/AppHeader.vue'
 import AppFooter from '../components/global/AppFooter.vue'
+
+// 儲存使用者名稱
+const userName = ref('');
+const authToken = useCookie('auth_token');
+
+// 獲取使用者名稱
+const fetchUserName = async () => {
+  try {
+    const response = await $fetch('https://freyja-rfio.onrender.com/api/v1/user/', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken.value}`,
+      },
+    });
+
+    if (response.status && response.result?.name) {
+      userName.value = response.result.name;
+    } else {
+      console.error('無法取得使用者名稱，請檢查 API 回應:', response);
+    }
+  } catch (error) {
+    console.error('API 請求錯誤:', error);
+  }
+};
+
+// 在組件加載時調用 API
+onMounted(fetchUserName);
 </script>
 
 <template>
@@ -18,7 +45,7 @@ import AppFooter from '../components/global/AppFooter.vue'
           class="hero-content d-flex flex-column flex-md-row justify-content-center justify-content-md-start align-items-md-center gap-4 gap-md-6 mx-5 my-10 mx-md-0 my-md-0">
           <img class="avatar" src="@/assets/images/avatar-6.png" alt="avatar">
           <h1 class="text-neutral-0 fw-bold">
-            Hello，Jessica
+            Hello，{{ userName }}
           </h1>
         </div>
       </div>
