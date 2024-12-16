@@ -66,6 +66,7 @@ useHead({
 definePageMeta({
   name: 'booking-confirmation',
   layout: 'front', // 與文件名一致
+  middleware: ['auth']
 });
 
 </script>

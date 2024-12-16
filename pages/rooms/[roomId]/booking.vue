@@ -9,6 +9,7 @@ useHead({
 definePageMeta({
   name: 'booking',
   layout: 'front', // 與文件名一致
+  middleware: ['auth']
 });
 const router = useRouter();
 const route = useRoute();

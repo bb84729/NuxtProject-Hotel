@@ -8,6 +8,7 @@ useHead({
 definePageMeta({
   name: 'order',
   layout: 'user', // 與文件名一致
+  middleware: ['auth']
 });
 
 // 儲存即將到來和歷史訂單

@@ -322,14 +322,9 @@ const handleBooking = () => {
                 class="btn btn-primary-100 py-4 text-neutral-0 fw-bold rounded-3"
                 @click="handleBooking"
               >
-                立即預訂1
+                立即預訂
               </button>
-              <NuxtLink
-              :to="{ name: 'booking' , params: { roomId: route.params.roomId } }"
-              class="btn btn-primary-100 py-4 text-neutral-0 fw-bold rounded-3"
-            >
-              立即預訂
-            </NuxtLink>
+              
             </div>
           </div>
         </div>
